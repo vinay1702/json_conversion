@@ -5,6 +5,7 @@ package org.conversion;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
@@ -51,12 +52,22 @@ public class StringToJson {
 					JSONObject jsonObject2 = getJSONOBJECT(follower);
 					followerJSONArray.put(jsonObject2);
 				}
-				//
 			}
 			profileObj.put("followers", followerJSONArray);
-
-			System.err.println("profileObj----- " + profileObj);
+			System.err.println(profileObj);
+			writeToFile(profileObj);
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void writeToFile(JSONObject profileObj) {
+		try (FileWriter file = new FileWriter("src/jsonFile.json")) {
+
+			file.write(profileObj.toString());
+			file.flush();
+
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -156,8 +167,7 @@ public class StringToJson {
 			br = new BufferedReader(new FileReader(FILENAME));
 			String sCurrentLine;
 			while ((sCurrentLine = br.readLine()) != null) {
-				System.out.println(sCurrentLine);
-				queryString = sCurrentLine;
+				queryString = queryString + sCurrentLine;
 			}
 
 		} catch (IOException e) {
@@ -175,85 +185,4 @@ public class StringToJson {
 		}
 		return queryString;
 	}
-
-	/*
-	 * public static void splitSubQuery(Map<String, String> query_pairs2) throws
-	 * UnsupportedEncodingException {
-	 * 
-	 * JSONObject profileObject = new JSONObject(); // String Encoded
-	 * 
-	 * String encodedString =
-	 * java.net.URLEncoder.encode(query_pairs2.get("profile"), "UTF-8"); // split by
-	 * | String[] splitByPipe = encodedString.split("%7C"); //
-	 * profileObject.put("id", splitByPipe[0]); System.out.println("--------- " +
-	 * encodedString);
-	 * 
-	 * String[] names = splitByPipe[1].split("%3E"); JSONObject nameJsonObj = new
-	 * JSONObject(); nameJsonObj.put("first", names[0].replaceAll("%3C", ""));
-	 * nameJsonObj.put("middle", names[1].replaceAll("%3C", ""));
-	 * nameJsonObj.put("last", names[2].replaceAll("%3C", ""));
-	 * 
-	 * profileObject.put("name", nameJsonObj); String[] locs =
-	 * splitByPipe[2].split("%3E"); JSONObject loc = new JSONObject();
-	 * loc.put("name", locs[0].replaceAll("%3C", ""));
-	 * 
-	 * JSONObject coords = new JSONObject(); coords.put("long",
-	 * locs[1].toString().replaceAll("%3C%3C", "")); coords.put("lat",
-	 * locs[2].toString().replaceAll("%3C", ""));
-	 * 
-	 * loc.put("coords", coords);
-	 * 
-	 * profileObject.put("location", loc); profileObject.put("imageId",
-	 * splitByPipe[3]);
-	 * 
-	 * encodedString = java.net.URLEncoder.encode(query_pairs2.get("followers"),
-	 * "UTF-8"); System.out.println("-----> " + query_pairs2.get("followers"));
-	 * 
-	 * String[] followers = encodedString.split("%40%40"); JSONArray followersarray
-	 * = new JSONArray();
-	 * 
-	 * for (String string : followers) { JSONObject followersObject = new
-	 * JSONObject(); splitByPipe = string.split("%7C"); followersObject.put("id",
-	 * splitByPipe[0]);
-	 * 
-	 * names = splitByPipe[1].split("%3E"); JSONObject followerJsonObj = new
-	 * JSONObject(); followerJsonObj.put("first", names[0].replaceAll("%3C", ""));
-	 * followerJsonObj.put("middle", names[1].replaceAll("%3C", ""));
-	 * followerJsonObj.put("last", names[2].replaceAll("%3C", ""));
-	 * 
-	 * followersObject.put("name", followerJsonObj); locs =
-	 * splitByPipe[2].split("%3E"); loc = new JSONObject(); loc.put("name",
-	 * locs[0].replaceAll("%3C", ""));
-	 * 
-	 * coords = new JSONObject(); coords.put("long",
-	 * locs[1].toString().replaceAll("%3C%3C", "")); coords.put("lat",
-	 * locs[2].toString().replaceAll("%3C", ""));
-	 * 
-	 * loc.put("coords", coords);
-	 * 
-	 * followersObject.put("location", loc); followersObject.put("imageId",
-	 * splitByPipe[3]); followersarray.put(followersObject);
-	 * 
-	 * }
-	 * 
-	 * profileObject.put("followers", followersarray);
-	 * 
-	 * System.out.println(profileObject.toString());
-	 * 
-	 * }
-	 * 
-	 * public static Map<String, String> splitQuery(String query) throws
-	 * UnsupportedEncodingException { Map<String, String> query_pairs = new
-	 * LinkedHashMap<String, String>(); String encodedString =
-	 * java.net.URLEncoder.encode(query, "UTF-8"); encodedString =
-	 * encodedString.replaceAll("\n", "").replaceAll("\t", ""); String[] pairs =
-	 * encodedString.split("\\*\\*"); for (String pair : pairs) { int idx =
-	 * pair.indexOf("%7C"); query_pairs.put(URLDecoder.decode(pair.substring(0,
-	 * idx), "UTF-8"), URLDecoder.decode(pair.substring(idx), "UTF-8"));
-	 * 
-	 * // System.out.println(pair.substring(0, idx)+" >>> "+ pair.substring(idx +
-	 * 3));
-	 * 
-	 * } return query_pairs; }
-	 */
 }
