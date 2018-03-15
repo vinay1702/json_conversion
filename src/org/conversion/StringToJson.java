@@ -23,9 +23,13 @@ public class StringToJson {
 	public static void main(String[] args) throws UnsupportedEncodingException {
 
 		try {
+			//get the query string from file
 			String paramValue = getStringFromFile();
 
+			//Main Json object
 			JSONObject profileObj = new JSONObject();
+			
+			//Spliting string from ** to get profile and followers
 			String[] mainObject = paramValue.split("\\*\\*");
 
 			String profileStr = "";
@@ -33,6 +37,7 @@ public class StringToJson {
 			try {
 				profileStr = mainObject[0];
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 
 			String followers = "";
